@@ -1,0 +1,16 @@
+INFO:backend.services.scrapers.base_scraper:[Ibom Air] Initializing driver with UA: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15
+INFO:WDM:====== WebDriver manager ======
+INFO:WDM:Get LATEST chromedriver version for google-chrome
+INFO:WDM:Get LATEST chromedriver version for google-chrome
+INFO:WDM:Driver [/Users/slime./.wdm/drivers/chromedriver/mac64/143.0.7499.192/chromedriver-mac-arm64/chromedriver] found in cache
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Navigating to homepage: https://www.ibomair.com
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Selecting Origin: LOS
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Selecting Destination: ABV
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Date Input Value: 15.01.2026
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Injected adult count = 1
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Clicking search button...
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Waiting for results...
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Current URL after wait: https://www.ibomair.com/
+INFO:backend.services.scrapers.ibom_air:[Ibom Air] Saved result page to ibom_results_interaction.html
+Testing Ibom Air Scraper for LOS -> ABV on 2026-01-15
+Test complete. Check ibom_results.html
