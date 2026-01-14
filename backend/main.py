@@ -24,16 +24,47 @@ async def search_flights(
     date: str = Query(...)
 ):
     """
-    Search endpoint that currently queries Amadeus.
-    Will be updated to include scrapers.
+    Search endpoint that queries Amadeus and Airline Scrapers concurrently.
     """
-    # Initialize Clients
+    import asyncio
+    from concurrent.futures import ThreadPoolExecutor
+    from .services.scrapers.valuejet import ValueJetScraper
+
+    # Helper wrapper to run synchronous scrapers safely
+    def run_scraper(scraper_cls, *args):
+        try:
+            scraper = scraper_cls()
+            return scraper.scrape(*args)
+        except Exception as e:
+            print(f"Scraper Error ({scraper_cls.__name__}): {e}")
+            return []
+
+    # 1. Fetch from Amadeus (Async/Fast)
+    # amadeus_client.search_flights is synchronous in our implementation but fast API call
+    # We can run it in executor too to be safe or just call it if it was async
     amadeus = AmadeusClient()
     
-    # 1. Fetch from Amadeus
-    results = amadeus.search_flights(origin, destination, date)
+    loop = asyncio.get_running_loop()
     
-    # 2. Future: Fetch from scrapers (Air Peace, Ibom, etc.) and extend 'results'
+    # Create tasks
+    # Task 1: Amadeus (API)
+    task_amadeus = loop.run_in_executor(None, amadeus.search_flights, origin, destination, date)
     
-    return results
+    # Task 2: ValueJet (Scraper - Slow, CPU bound-ish due to browser)
+    task_valuejet = loop.run_in_executor(None, lambda: run_scraper(ValueJetScraper, origin, destination, date))
+    
+    # Await all
+    # return_exceptions=True means we get results even if one fails
+    results_list = await asyncio.gather(task_amadeus, task_valuejet, return_exceptions=True)
+    
+    final_results = []
+    
+    for res in results_list:
+        if isinstance(res, list):
+            final_results.extend(res)
+        else:
+            # It was an exception or error
+            print(f"Search task failed: {res}")
+
+    return final_results
 
