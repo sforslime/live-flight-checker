@@ -12,18 +12,19 @@ We have successfully built the foundation of the flight aggregator. The system c
 | **Ibom Air Scraper** | ⚠️ **Partial** | Search automation works (hybrid approach). "Best Effort" stability due to complex anti-bot measures. |
 | **ValueJet Scraper** | ✅ **Complete** | Fully functional: Searches, identifies no-flight days, and parses results with robust XPATH. |
 | **XEJet Scraper** | ✅ **Complete** | **Success:** robust jQuery Datepicker automation + XPATH parsing of AeroCRS results page. Integrated into backend. |
-| **Arik Air Scraper** | ⏳ **Pending** | Not yet started. |
+| **Arik Air Scraper** | ✅ **Implemented** | Blocked by Cloudflare (WAF/Turnstile) in Headless |
+| **Air Peace Scraper** | ⏳ **Pending** | Next |
+| **Green Africa Scraper** | ⏳ **Pending** | Next |
+| **Dana Air Scraper** | ⏳ **Pending** | Next |
 | **Aggregator Logic** | ✅ **Complete** | `backend/main.py` efficiently queries Amadeus, ValueJet, and XEJet in parallel. |
 | **Frontend** | ✅ **Integrated** | UI now displays mixed results from API and Scrapers (Purple Badge). |
 
-## 3. Deep Dive: Scrapers
+## 3. Deep Dive: Scraper Status
 
-### XEJet (Completed)
-- **Challenge:** The search form uses a strict jQuery UI datepicker that blocks manual typing (read-only input). JS injection failed validation.
-- **Solution:** Implemented "Natural Interaction" logic that programs the bot to open the calendar, click "Next Month" until the target is reached, and select the specific day.
-- **Result:** 100% reliable search submission and parsing.
+### Amadeus
+- **Status**: Working perfectly.
 
-### ValueJet (Completed)
+### ValueJet
 - **Achievements:** 
     - Full end-to-end automation implemented.
     - Result parsing matches distinct flight cards, times, and prices.

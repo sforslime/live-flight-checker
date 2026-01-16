@@ -30,6 +30,7 @@ async def search_flights(
     from concurrent.futures import ThreadPoolExecutor
     from .services.scrapers.valuejet import ValueJetScraper
     from .services.scrapers.xejet import XEJetScraper
+    from .services.scrapers.arik_air import ArikAirScraper
 
     # Helper wrapper to run synchronous scrapers safely
     def run_scraper(scraper_cls, *args):
@@ -54,10 +55,13 @@ async def search_flights(
     
     # Task 3: XEJet (Scraper)
     task_xejet = loop.run_in_executor(None, lambda: run_scraper(XEJetScraper, origin, destination, date))
+
+    # Task 4: Arik Air (Scraper)
+    task_arik = loop.run_in_executor(None, lambda: run_scraper(ArikAirScraper, origin, destination, date))
     
     # Await all
     # return_exceptions=True means we get results even if one fails
-    results_list = await asyncio.gather(task_amadeus, task_valuejet, task_xejet, return_exceptions=True)
+    results_list = await asyncio.gather(task_amadeus, task_valuejet, task_xejet, task_arik, return_exceptions=True)
     
     final_results = []
     

@@ -7,3 +7,4 @@ webdriver-manager
 python-dotenv
 requests
 pandas
+undetected-chromedriver
