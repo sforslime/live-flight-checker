@@ -11,13 +11,19 @@ We have successfully built the foundation of the flight aggregator. The system c
 | **Amadeus API** | ✅ **Complete** | Authentication and Flight Search are fully functional. |
 | **Ibom Air Scraper** | ⚠️ **Partial** | Search automation works (hybrid approach). "Best Effort" stability due to complex anti-bot measures. |
 | **ValueJet Scraper** | ✅ **Complete** | Fully functional: Searches, identifies no-flight days, and parses results with robust XPATH. |
+| **XEJet Scraper** | ✅ **Complete** | **Success:** robust jQuery Datepicker automation + XPATH parsing of AeroCRS results page. Integrated into backend. |
 | **Arik Air Scraper** | ⏳ **Pending** | Not yet started. |
-| **Aggregator Logic** | ✅ **Complete** | `backend/main.py` efficiently queries Amadeus and ValueJet in parallel. |
-| **Frontend** | ✅ **Integrated** | UI now displays mixed results from API (Blue Badge) and Scrapers (Purple Badge). |
+| **Aggregator Logic** | ✅ **Complete** | `backend/main.py` efficiently queries Amadeus, ValueJet, and XEJet in parallel. |
+| **Frontend** | ✅ **Integrated** | UI now displays mixed results from API and Scrapers (Purple Badge). |
 
 ## 3. Deep Dive: Scrapers
 
-### ValueJet (Current Focus)
+### XEJet (Completed)
+- **Challenge:** The search form uses a strict jQuery UI datepicker that blocks manual typing (read-only input). JS injection failed validation.
+- **Solution:** Implemented "Natural Interaction" logic that programs the bot to open the calendar, click "Next Month" until the target is reached, and select the specific day.
+- **Result:** 100% reliable search submission and parsing.
+
+### ValueJet (Completed)
 - **Achievements:** 
     - Full end-to-end automation implemented.
     - Result parsing matches distinct flight cards, times, and prices.
@@ -25,10 +31,7 @@ We have successfully built the foundation of the flight aggregator. The system c
 
 ### Ibom Air
 - **Status:** Functional but fragile.
-- **Challenge:** The site is heavily guarded (iframe forms, dynamic token validation).
-- **Solution:** We used a hybrid approach (Javascript injection for inputs + Native interaction for submission).
 
 ## 4. Immediate Roadmap
 1. **Arik Air:** Initialize the Arik Air scraper.
-2. **Refinement:** Monitor stability of ValueJet integration during extensive testing.
-3. **Deployment:** Prepare Docker container.
+2. **Deployment:** Prepare Docker container.

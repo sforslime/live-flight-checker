@@ -1,9 +1,0 @@
-Navigating to https://booking.xejet.com/VARS/public/CustomerPanels/requirementsBS.aspx
-Selecting Origin: LOS
-Selecting Destination: ABV
-Selecting One Way
-Setting Date: 18-Jan-2026
-Clicking Search
-Waiting for results...
-Error: Message: 
-

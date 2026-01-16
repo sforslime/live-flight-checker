@@ -29,6 +29,7 @@ async def search_flights(
     import asyncio
     from concurrent.futures import ThreadPoolExecutor
     from .services.scrapers.valuejet import ValueJetScraper
+    from .services.scrapers.xejet import XEJetScraper
 
     # Helper wrapper to run synchronous scrapers safely
     def run_scraper(scraper_cls, *args):
@@ -40,8 +41,6 @@ async def search_flights(
             return []
 
     # 1. Fetch from Amadeus (Async/Fast)
-    # amadeus_client.search_flights is synchronous in our implementation but fast API call
-    # We can run it in executor too to be safe or just call it if it was async
     amadeus = AmadeusClient()
     
     loop = asyncio.get_running_loop()
@@ -50,12 +49,15 @@ async def search_flights(
     # Task 1: Amadeus (API)
     task_amadeus = loop.run_in_executor(None, amadeus.search_flights, origin, destination, date)
     
-    # Task 2: ValueJet (Scraper - Slow, CPU bound-ish due to browser)
+    # Task 2: ValueJet (Scraper)
     task_valuejet = loop.run_in_executor(None, lambda: run_scraper(ValueJetScraper, origin, destination, date))
+    
+    # Task 3: XEJet (Scraper)
+    task_xejet = loop.run_in_executor(None, lambda: run_scraper(XEJetScraper, origin, destination, date))
     
     # Await all
     # return_exceptions=True means we get results even if one fails
-    results_list = await asyncio.gather(task_amadeus, task_valuejet, return_exceptions=True)
+    results_list = await asyncio.gather(task_amadeus, task_valuejet, task_xejet, return_exceptions=True)
     
     final_results = []
     
