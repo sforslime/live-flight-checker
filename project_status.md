@@ -25,15 +25,11 @@ We have successfully built the foundation of the flight aggregator. The system c
 ### Amadeus
 - **Status**: Working perfectly.
 
-### ValueJet
+### ValueJet & XEJet
 - **Achievements:** 
     - Full end-to-end automation implemented.
     - Result parsing matches distinct flight cards, times, and prices.
     - Integrated into the main API search flow.
 
-### Ibom Air
-- **Status:** Functional but fragile.
-
 ## 4. Immediate Roadmap
-1. **United Nigeria:** Analyze and implement scraper.
-2. **Air Peace:** Next target.
+1. **Overland Airways:** Analyze and implement scraper.
