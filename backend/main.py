@@ -57,25 +57,24 @@ async def search_flights(
     loop = asyncio.get_running_loop()
     
     # Create tasks
-    # Task 1: Amadeus (API)
+    # Task 1: Amadeus (API) - Run this in background while we scrape
     task_amadeus = loop.run_in_executor(None, amadeus.search_flights, origin, destination, date)
     
-    # Task 2: ValueJet (Scraper)
-    task_valuejet = loop.run_in_executor(None, lambda: run_scraper(ValueJetScraper, origin, destination, date))
+    # Run Scrapers Sequentially to prevent driver crashes locally
+    results_list = []
     
-    # Task 3: XEJet (Scraper)
-    task_xejet = loop.run_in_executor(None, lambda: run_scraper(XEJetScraper, origin, destination, date))
-
-    # Task 4: United Nigeria (Scraper) - Disabled for stability
-    # task_united = loop.run_in_executor(None, lambda: run_scraper(UnitedNigeriaScraper, origin, destination, date))
+    # ValueJet
+    results_list.append(await loop.run_in_executor(None, lambda: run_scraper(ValueJetScraper, origin, destination, date)))
     
-    # Await all
-    # return_exceptions=True means we get results even if one fails
-    # Removed task_united from gather
-    results_list = await asyncio.gather(task_amadeus, task_valuejet, task_xejet, return_exceptions=True)
+    # XEJet 
+    results_list.append(await loop.run_in_executor(None, lambda: run_scraper(XEJetScraper, origin, destination, date)))
     
+    # Wait for Amadeus (should be done by now)
+    amadeus_results = await task_amadeus
+    results_list.append(amadeus_results)
+    
+    # Flatten results
     final_results = []
-    
     for res in results_list:
         if isinstance(res, list):
             final_results.extend(res)
