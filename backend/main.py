@@ -35,11 +35,20 @@ async def search_flights(
 
     # Helper wrapper to run synchronous scrapers safely
     def run_scraper(scraper_cls, *args):
+        import time
+        start = time.time()
+        print(f"--- Starting {scraper_cls.__name__} ---")
         try:
             scraper = scraper_cls()
-            return scraper.scrape(*args)
+            results = scraper.scrape(*args)
+            duration = time.time() - start
+            print(f"--- Finished {scraper_cls.__name__} in {duration:.2f}s. Found {len(results)} flights. ---")
+            return results
         except Exception as e:
-            print(f"Scraper Error ({scraper_cls.__name__}): {e}")
+            duration = time.time() - start
+            print(f"!!! Scraper Error ({scraper_cls.__name__}) after {duration:.2f}s: {e}")
+            import traceback
+            traceback.print_exc()
             return []
 
     # 1. Fetch from Amadeus (Async/Fast)
@@ -57,12 +66,13 @@ async def search_flights(
     # Task 3: XEJet (Scraper)
     task_xejet = loop.run_in_executor(None, lambda: run_scraper(XEJetScraper, origin, destination, date))
 
-    # Task 4: United Nigeria (Scraper)
-    task_united = loop.run_in_executor(None, lambda: run_scraper(UnitedNigeriaScraper, origin, destination, date))
+    # Task 4: United Nigeria (Scraper) - Disabled for stability
+    # task_united = loop.run_in_executor(None, lambda: run_scraper(UnitedNigeriaScraper, origin, destination, date))
     
     # Await all
     # return_exceptions=True means we get results even if one fails
-    results_list = await asyncio.gather(task_amadeus, task_valuejet, task_xejet, task_united, return_exceptions=True)
+    # Removed task_united from gather
+    results_list = await asyncio.gather(task_amadeus, task_valuejet, task_xejet, return_exceptions=True)
     
     final_results = []
     
