@@ -12,7 +12,8 @@ We have successfully built the foundation of the flight aggregator. The system c
 | **Ibom Air Scraper** | ⚠️ **Partial** | Search automation works (hybrid approach). "Best Effort" stability due to complex anti-bot measures. |
 | **ValueJet Scraper** | ✅ **Complete** | Fully functional: Searches, identifies no-flight days, and parses results with robust XPATH. |
 | **XEJet Scraper** | ✅ **Complete** | **Success:** robust jQuery Datepicker automation + XPATH parsing of AeroCRS results page. Integrated into backend. |
-| **Arik Air Scraper** | ✅ **Implemented** | Blocked by Cloudflare (WAF/Turnstile) in Headless |
+| **Arik Air Scraper** | ❌ **Abandoned** | Blocked by Cloudflare (WAF). |
+| **United Nigeria Scraper** | ⚠️ **Beta** | Scraper Implemented, Parser pending validation (Videcom System). |
 | **Air Peace Scraper** | ⏳ **Pending** | Next |
 | **Green Africa Scraper** | ⏳ **Pending** | Next |
 | **Dana Air Scraper** | ⏳ **Pending** | Next |
@@ -34,5 +35,5 @@ We have successfully built the foundation of the flight aggregator. The system c
 - **Status:** Functional but fragile.
 
 ## 4. Immediate Roadmap
-1. **Arik Air:** Initialize the Arik Air scraper.
-2. **Deployment:** Prepare Docker container.
+1. **United Nigeria:** Analyze and implement scraper.
+2. **Air Peace:** Next target.

@@ -21,7 +21,7 @@ def main():
     # Test search: Lagos (LOS) to Abuja (ABV)
     origin = "LOS"
     destination = "ABV"
-    date = "2026-01-20"  # A few days in the future
+    date = "2026-01-21"  # A few days in the future
     
     print(f"Searching ValueJet: {origin} -> {destination} on {date}")
     
