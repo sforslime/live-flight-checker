@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // UI State: Loading
         resultsArea.innerHTML = ''; // Clear results
+        document.getElementById('results-separator').classList.add('hidden'); // Hide line
         errorMsg.classList.add('hidden');
         loading.classList.remove('hidden');
         searchBtnText.textContent = 'Searching...';
@@ -137,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            document.getElementById('results-separator').classList.remove('hidden');
             currentFlights = data;
             renderResults(data);
 
@@ -151,6 +153,19 @@ document.addEventListener('DOMContentLoaded', () => {
             currentFlights = [];
         }
     });
+
+    const cityMap = {
+        "LOS": "Lagos",
+        "ABV": "Abuja",
+        "PHC": "Port Harcourt",
+        "KAN": "Kano",
+        "ENU": "Enugu",
+        "QW": "Owerri",
+        "BNI": "Benin",
+        "IBA": "Ibadan",
+        "ILR": "Ilorin",
+        "GMO": "Gombe"
+    };
 
     function renderResults(flights) {
         // Sort logic
@@ -169,49 +184,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sorted.forEach(flight => {
             const card = document.createElement('div');
-            // Tailwind styling for the results card to match the "Surface" look
-            card.className = 'flight-card flex flex-col md:flex-row justify-between items-center bg-surface-light dark:bg-surface-dark p-6 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 w-full hover:shadow-lg transition-all duration-300';
+            // Card Container
+            card.className = 'flight-card bg-surface-light dark:bg-surface-dark p-6 rounded-2xl shadow-soft dark:shadow-none border border-gray-100 dark:border-gray-700 w-full hover:shadow-lg transition-all duration-300';
 
-            const deptTime = new Date(flight.departure_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const arrTime = new Date(flight.arrival_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const deptDate = new Date(flight.departure_time);
+            const arrDate = new Date(flight.arrival_time);
+
+            const deptTime = deptDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            const arrTime = arrDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            // Duration Calc
+            const diffMs = arrDate - deptDate;
+            const diffHrs = Math.floor(diffMs / 3600000);
+            const diffMins = Math.round(((diffMs % 3600000) / 60000));
+            const durationStr = `${diffHrs}h ${diffMins}m`;
 
             const formatter = new Intl.NumberFormat('en-NG', {
                 style: 'currency',
-                currency: flight.currency || 'NGN'
+                currency: flight.currency || 'NGN',
+                maximumFractionDigits: 0
             });
 
-            // "Amadeus" vs "Scraper" badge
-            const sourceBadgeColor = flight.source === 'Amadeus' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800';
+            const originCity = cityMap[flight.origin] || flight.origin;
+            const destCity = cityMap[flight.destination] || flight.destination;
+            const airlineInitial = flight.airline.charAt(0);
+
+            // Generate Airline Logo
+            let logoContent;
+            let logoBg;
+
+            if (flight.airline === "ValueJet") {
+                logoContent = `<img src="/static/images/valuejet.png" alt="ValueJet" class="w-full h-full object-contain p-2">`;
+                logoBg = "bg-white border border-gray-100";
+            } else if (flight.airline === "XEJet") {
+                logoContent = `<img src="/static/images/xejet.png" alt="XEJet" class="w-full h-full object-contain p-2">`;
+                logoBg = "bg-white border border-gray-100";
+            } else if (flight.airline === "Air Peace") {
+                logoContent = `<img src="/static/images/airpeace.png" alt="Air Peace" class="w-full h-full object-contain p-1">`;
+                logoBg = "bg-white border border-gray-100";
+            } else {
+                // Keep random pastel fallback for others
+                const colors = ['bg-emerald-200', 'bg-blue-200', 'bg-purple-200', 'bg-orange-200', 'bg-rose-200'];
+                const colorIdx = flight.airline.length % colors.length;
+                logoBg = colors[colorIdx];
+                logoContent = flight.airline.charAt(0);
+            }
 
             card.innerHTML = `
-                <div class="flex-1 w-full md:w-auto mb-4 md:mb-0">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-xl font-bold text-text-light dark:text-text-dark">${flight.airline}</span>
-                        <span class="text-xs px-2 py-1 rounded-full ${sourceBadgeColor} font-medium">${flight.source}</span>
-                    </div>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                     
-                    <div class="flex items-center gap-6 text-subtext-light dark:text-subtext-dark">
-                        <div class="flex flex-col">
-                            <span class="text-2xl font-semibold text-text-light dark:text-text-dark">${deptTime}</span>
-                            <span class="text-sm text-subtext-light">${flight.origin}</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <span class="material-icons text-gray-300">flight_takeoff</span>
-                            <span class="text-xs text-gray-400">Direct</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-2xl font-semibold text-text-light dark:text-text-dark">${arrTime}</span>
-                            <span class="text-sm text-subtext-light">${flight.destination}</span>
+                    <!-- Left: Airline Logo & Info -->
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <div class="h-14 w-14 rounded-full ${logoBg} flex items-center justify-center text-gray-700 font-bold text-xl shadow-sm overflow-hidden">
+                            ${logoContent}
                         </div>
                     </div>
-                </div>
 
-                <div class="flex flex-col items-end gap-2 w-full md:w-auto">
-                    <span class="text-3xl font-bold text-primary">${formatter.format(flight.price)}</span>
-                    <a href="${flight.booking_link || '#'}" target="_blank" 
-                       class="px-6 py-2 bg-text-light dark:bg-text-dark text-surface-light dark:text-surface-dark rounded-full font-medium hover:opacity-90 transition-opacity">
-                       ${flight.booking_link ? 'Book Now ↗' : 'View Details'}
-                    </a>
+                    <!-- Middle: Flight Details -->
+                    <div class="flex flex-1 items-center justify-between w-full md:w-auto px-2 md:px-12 gap-4">
+                        
+                        <!-- Departure -->
+                        <div class="text-left">
+                            <div class="text-3xl font-bold text-text-light dark:text-text-dark">${deptTime}</div>
+                            <div class="text-sm text-subtext-light dark:text-subtext-dark font-medium">${flight.origin} • ${originCity}</div>
+                        </div>
+
+                        <!-- Duration / Nonstop -->
+                        <div class="flex flex-col items-center justify-center w-full px-4">
+                            <span class="text-xs text-subtext-light dark:text-subtext-dark mb-1">${durationStr}</span>
+                            <div class="flex items-center w-full gap-2">
+                                <div class="h-[1px] bg-gray-300 dark:bg-gray-600 w-full"></div>
+                                <span class="text-[10px] font-bold text-subtext-light dark:text-subtext-dark uppercase tracking-wider whitespace-nowrap">NONSTOP</span>
+                                <div class="h-[1px] bg-gray-300 dark:bg-gray-600 w-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- Arrival -->
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-text-light dark:text-text-dark">${arrTime}</div>
+                            <div class="text-sm text-subtext-light dark:text-subtext-dark font-medium">${flight.destination} • ${destCity}</div>
+                        </div>
+                    </div>
+
+                    <!-- Divider (Desktop only) -->
+                    <div class="hidden md:block w-[1px] h-16 bg-gray-200 dark:bg-gray-700 mx-2"></div>
+
+                    <!-- Right: Price & Action -->
+                    <div class="text-right flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto mt-4 md:mt-0 gap-4">
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-text-light dark:text-text-dark">${formatter.format(flight.price)}</div>
+                            <div class="text-xs text-subtext-light dark:text-subtext-dark">One way</div>
+                        </div>
+                        
+                        <a href="${flight.booking_link || '#'}" target="_blank" 
+                           class="bg-[#4285F4] hover:bg-blue-600 text-white font-medium py-2 px-8 rounded-full transition-colors shadow-sm text-sm">
+                           ${flight.booking_link ? 'Select' : 'View'}
+                        </a>
+                    </div>
                 </div>
             `;
 

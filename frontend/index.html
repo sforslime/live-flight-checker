@@ -149,11 +149,6 @@
                                 <option value="XEJet">XEJet</option>
                                 <option disabled>── GDS / API ──</option>
                                 <option value="Air Peace">Air Peace</option>
-                                <option value="Arik Air">Arik Air</option>
-                                <option value="Green Africa">Green Africa</option>
-                                <option value="Dana Air">Dana Air</option>
-                                <option value="Overland">Overland Airways</option>
-                                <option value="Ibom Air">Ibom Air</option>
                             </select>
                         </div>
 
@@ -189,16 +184,11 @@
             </form>
         </div>
 
-        <!-- Quick Filters/Chips (Visual only for now) -->
-        <div class="w-full max-w-4xl mt-8 flex flex-wrap gap-3 px-2">
-            <button
-                class="flex items-center gap-2 px-5 py-3 bg-surface-light dark:bg-surface-dark rounded-full shadow-sm hover:bg-[#e6eaf0] dark:hover:bg-[#2a2b2e] transition-colors text-text-light dark:text-text-dark text-sm font-medium border border-gray-100 dark:border-gray-700">
-                <span class="text-lg">🌴</span> Explore
-            </button>
-            <button
-                class="flex items-center gap-2 px-5 py-3 bg-surface-light dark:bg-surface-dark rounded-full shadow-sm hover:bg-[#e6eaf0] dark:hover:bg-[#2a2b2e] transition-colors text-text-light dark:text-text-dark text-sm font-medium border border-gray-100 dark:border-gray-700">
-                <span class="text-lg">⚡</span> Deals
-            </button>
+        <!-- Results Separator Line -->
+        <div id="results-separator" class="hidden w-full max-w-4xl mt-8 mb-6">
+            <div
+                class="w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 rounded-full">
+            </div>
         </div>
 
         <!-- Results Section -->
@@ -221,7 +211,7 @@
         AI-Powered Search • AYO!
     </footer>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=2"></script>
 </body>
 
 </html>
