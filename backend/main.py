@@ -68,6 +68,10 @@ async def search_flights(
     
     # XEJet 
     results_list.append(await loop.run_in_executor(None, lambda: run_scraper(XEJetScraper, origin, destination, date)))
+
+    # Overland Airways
+    from .services.scrapers.overland import OverlandScraper
+    results_list.append(await loop.run_in_executor(None, lambda: run_scraper(OverlandScraper, origin, destination, date)))
     
     # Wait for Amadeus (should be done by now)
     amadeus_results = await task_amadeus
