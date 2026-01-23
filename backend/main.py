@@ -31,7 +31,7 @@ async def search_flights(
     from .services.scrapers.valuejet import ValueJetScraper
     from .services.scrapers.xejet import XEJetScraper
 
-    from .services.scrapers.united_nigeria import UnitedNigeriaScraper
+
 
     # Helper wrapper to run synchronous scrapers safely
     def run_scraper(scraper_cls, *args):

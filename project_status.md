@@ -9,11 +9,11 @@ We have successfully built the foundation of the flight aggregator. The system c
 |-----------|--------|---------|
 | **Core Backend** | ✅ **Complete** | FastAPI server, Pydantic models, and Project structure are set up. |
 | **Amadeus API** | ✅ **Complete** | Authentication and Flight Search are fully functional. |
-| **Ibom Air Scraper** | ⚠️ **Partial** | Search automation works (hybrid approach). "Best Effort" stability due to complex anti-bot measures. |
+| **Ibom Air Scraper** | ❌ **Deleted** | Removed due to instability and maintenance costs. |
 | **ValueJet Scraper** | ✅ **Complete** | Fully functional: Searches, identifies no-flight days, and parses results with robust XPATH. |
 | **XEJet Scraper** | ✅ **Complete** | **Success:** robust jQuery Datepicker automation + XPATH parsing of AeroCRS results page. Integrated into backend. |
 | **Arik Air Scraper** | ❌ **Abandoned** | Blocked by Cloudflare (WAF). |
-| **United Nigeria Scraper** | ⚠️ **Beta** | Scraper Implemented, Parser pending validation (Videcom System). |
+| **United Nigeria Scraper** | ❌ **Deleted** | Removed due to instability (driver crashes) on local environment. |
 | **Air Peace Scraper** | ⏳ **Pending** | Next |
 | **Green Africa Scraper** | ⏳ **Pending** | Next |
 | **Dana Air Scraper** | ⏳ **Pending** | Next |
