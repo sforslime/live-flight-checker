@@ -121,7 +121,7 @@ class XEJetScraper(BaseScraper):
         except Exception as e:
             logger.error(f"[{self.airline_name}] Scraping failed: {e}")
             if self.driver:
-                self.driver.save_screenshot(f"{self.airline_name.lower()}_error.png")
+                self.take_screenshot("error")
                 with open(f"{self.airline_name.lower()}_error.html", "w", encoding="utf-8") as f:
                     f.write(self.driver.page_source)
             

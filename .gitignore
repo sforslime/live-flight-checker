@@ -15,3 +15,8 @@ venv/
 # PyCharm/VS Code
 .idea/
 .vscode/
+
+# Scraper Artifacts
+backend/screenshots/*
+*.png
+*.html

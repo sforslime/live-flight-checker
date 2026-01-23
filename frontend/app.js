@@ -110,16 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const destination = formData.get('destination').toUpperCase().trim();
         const date = formData.get('date');
 
-        // Construct URL with airlines
+        // Construct URL
         const params = new URLSearchParams({
             origin,
             destination,
             date
         });
-
-        if (!selectedAirlines.has("ALL")) {
-            selectedAirlines.forEach(a => params.append('airlines', a));
-        }
 
         try {
             const response = await fetch(`/api/search?${params.toString()}`);

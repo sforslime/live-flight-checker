@@ -58,6 +58,29 @@ class BaseScraper(abc.ABC):
             self.driver.quit()
             self.driver = None
 
+    def take_screenshot(self, name: str):
+        """Saves a screenshot to backend/screenshots directory."""
+        if not self.driver:
+            return
+            
+        import os
+        from datetime import datetime
+        
+        # Ensure directory exists
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # backend/
+        screenshot_dir = os.path.join(base_dir, "screenshots")
+        os.makedirs(screenshot_dir, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{self.airline_name}_{name}_{timestamp}.png"
+        filepath = os.path.join(screenshot_dir, filename)
+        
+        try:
+            self.driver.save_screenshot(filepath)
+            logger.info(f"[{self.airline_name}] Screenshot saved: {filepath}")
+        except Exception as e:
+            logger.error(f"[{self.airline_name}] Failed to save screenshot: {e}")
+
     @abc.abstractmethod
     def scrape(self, origin: str, destination: str, date: str) -> List[FlightOffer]:
         """

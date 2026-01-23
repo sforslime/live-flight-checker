@@ -149,8 +149,7 @@ class ValueJetScraper(BaseScraper):
             logger.info(f"[{self.airline_name}] Saved results to valuejet_results.html")
             
             # Screenshot for debugging
-            self.driver.save_screenshot("valuejet_results.png")
-            logger.info(f"[{self.airline_name}] Saved screenshot to valuejet_results.png")
+            self.take_screenshot("results")
             
             # 7. Parse Results
             flights = self._parse_results()
@@ -159,7 +158,8 @@ class ValueJetScraper(BaseScraper):
         except Exception as e:
             logger.error(f"[{self.airline_name}] Scraping failed: {e}")
             if self.driver:
-                self.driver.save_screenshot("valuejet_error.png")
+                self.take_screenshot("error")
+                # Also save HTML for parsing debug
                 with open("valuejet_error.html", "w", encoding="utf-8") as f:
                     f.write(self.driver.page_source)
         finally:
