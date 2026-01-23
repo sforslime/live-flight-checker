@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet" />
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=2">
     <!-- Flatpickr for custom date picker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
@@ -23,8 +23,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#581c87",
-                        "primary-hover": "#4c1d75",
+                        primary: "#34A853",      // Google Green
+                        "primary-hover": "#2d8f47",
+                        secondary: "#4285F4",    // Google Blue
                         "background-light": "#f0f4f9",
                         "background-dark": "#131314",
                         "surface-light": "#ffffff",
@@ -88,7 +89,7 @@
                                 class="material-icons text-subtext-light dark:text-subtext-dark opacity-50">flight_takeoff</span>
                         </div>
                         <select id="origin" name="origin"
-                            class="appearance-none block w-full pl-12 pr-10 py-4 bg-background-light dark:bg-background-dark border-none rounded-2xl text-lg text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary dark:focus:ring-primary/50 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                            class="appearance-none outline-none block w-full pl-12 pr-10 py-4 bg-background-light dark:bg-background-dark border-none rounded-2xl text-lg text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary dark:focus:ring-primary/50 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
                             <option value="LOS">Lagos (LOS)</option>
                             <option value="ABV">Abuja (ABV)</option>
                             <option value="KAN">Kano (KAN)</option>
@@ -106,7 +107,7 @@
                                 class="material-icons text-subtext-light dark:text-subtext-dark opacity-50">flight_land</span>
                         </div>
                         <select id="destination" name="destination"
-                            class="appearance-none block w-full pl-12 pr-10 py-4 bg-background-light dark:bg-background-dark border-none rounded-2xl text-lg text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary dark:focus:ring-primary/50 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                            class="appearance-none outline-none block w-full pl-12 pr-10 py-4 bg-background-light dark:bg-background-dark border-none rounded-2xl text-lg text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary dark:focus:ring-primary/50 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
                             <option value="ABV" selected>Abuja (ABV)</option>
                             <option value="LOS">Lagos (LOS)</option>
                             <option value="KAN">Kano (KAN)</option>
@@ -133,14 +134,50 @@
                 </div>
 
                 <div class="flex justify-between items-center mt-2 px-2">
-                    <div class="flex items-center gap-4 text-subtext-light dark:text-subtext-dark">
-                        <!-- Extra options (placeholders for now) -->
-                        <button
-                            class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
-                            type="button">
-                            <span class="material-symbols-outlined text-lg">tune</span>
-                            Filters
-                        </button>
+                    <div class="flex items-center gap-9 text-subtext-light dark:text-subtext-dark">
+                        <!-- Airline Filter -->
+                        <div
+                            class="relative group flex items-center gap-1 cursor-pointer hover:text-primary transition-colors">
+                            <span id="airline-filter-label" class="text-sm font-medium z-0">All Airlines</span>
+                            <span class="material-icons text-lg">expand_more</span>
+
+                            <select id="airline-filter"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none">
+                                <option value="ALL">All Airlines</option>
+                                <option disabled>── Scrapers ──</option>
+                                <option value="ValueJet">ValueJet</option>
+                                <option value="XEJet">XEJet</option>
+                                <option disabled>── GDS / API ──</option>
+                                <option value="Air Peace">Air Peace</option>
+                                <option value="Arik Air">Arik Air</option>
+                                <option value="Green Africa">Green Africa</option>
+                                <option value="Dana Air">Dana Air</option>
+                                <option value="Overland">Overland Airways</option>
+                                <option value="Ibom Air">Ibom Air</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort Filter -->
+                        <div
+                            class="relative group flex items-center gap-1 cursor-pointer hover:text-primary transition-colors">
+                            <span id="sort-filter-label" class="text-sm font-medium z-0">Sort by: Cheapest</span>
+                            <span class="material-icons text-lg">expand_more</span>
+                            <select id="sort-filter"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none">
+                                <option value="cheapest">Cheapest</option>
+                                <option value="highest">Highest Price</option>
+                                <option value="earliest">Earliest Departure</option>
+                                <option value="latest">Latest Departure</option>
+                            </select>
+                        </div>
+
+                        <!-- Class Filter -->
+                        <div class="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors">
+                            <span class="text-sm font-medium">Economy</span>
+                            <span class="material-icons text-lg">expand_more</span>
+                        </div>
+
+
                     </div>
                     <button id="search-btn"
                         class="flex items-center gap-2 text-subtext-light dark:text-subtext-dark hover:text-primary dark:hover:text-primary-light transition-colors"

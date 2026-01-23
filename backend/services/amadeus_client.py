@@ -21,22 +21,28 @@ class AmadeusClient:
                 client_secret=self.client_secret
             )
 
-    def search_flights(self, origin: str, destination: str, departure_date: str):
+    def search_flights(self, origin: str, destination: str, departure_date: str, included_airlines: list = None):
         """
         Search for flights using Amadeus Flight Offers Search API.
         departure_date format: YYYY-MM-DD
+        included_airlines: List of IATA codes to filter by.
         """
         if not self.amadeus:
             return []
 
         try:
-            response = self.amadeus.shopping.flight_offers_search.get(
-                originLocationCode=origin,
-                destinationLocationCode=destination,
-                departureDate=departure_date,
-                adults=1,
-                currencyCode='NGN'
-            )
+            kwargs = {
+                'originLocationCode': origin,
+                'destinationLocationCode': destination,
+                'departureDate': departure_date,
+                'adults': 1,
+                'currencyCode': 'NGN'
+            }
+            
+            if included_airlines:
+                kwargs['includedAirlineCodes'] = ",".join(included_airlines)
+
+            response = self.amadeus.shopping.flight_offers_search.get(**kwargs)
             
             flight_offers = []
             for offer in response.data:

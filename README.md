@@ -47,7 +47,7 @@ A modern, hybrid flight search engine designed to find the cheapest realtime pri
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/live-flight-checker.git
+    git clone https://github.com/sforslime/live-flight-checker.git
     cd live-flight-checker
     ```
 
