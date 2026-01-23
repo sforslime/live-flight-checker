@@ -2,7 +2,7 @@
 
 A modern, hybrid flight search engine designed to find the cheapest realtime prices for domestic Nigerian flights. It seamlessly combines data from global GDS systems (via Amadeus API) with direct airline website scraping to provide complete market coverage.
 
-![Project Status](https://img.shields.io/badge/status-live-green)
+![Project Status](https://img.shields.io/badge/status-completeish%25-green)
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 
 ## 🌟 Key Features
