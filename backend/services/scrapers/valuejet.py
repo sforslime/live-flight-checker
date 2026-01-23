@@ -148,9 +148,6 @@ class ValueJetScraper(BaseScraper):
                 f.write(self.driver.page_source)
             logger.info(f"[{self.airline_name}] Saved results to valuejet_results.html")
             
-            # Screenshot for debugging
-            self.take_screenshot("results")
-            
             # 7. Parse Results
             flights = self._parse_results()
             logger.info(f"[{self.airline_name}] Found {len(flights)} flights")
