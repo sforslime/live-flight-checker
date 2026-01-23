@@ -1,114 +1,135 @@
 # Naija Flights - Live Flight Checker ✈️
 
-A modern, hybrid flight search engine designed to find the cheapest realtime prices for domestic Nigerian flights. It seamlessly combines data from global GDS systems (via Amadeus API) with direct airline website scraping to provide comprehensive coverage.
+A modern, hybrid flight search engine designed to find the cheapest realtime prices for domestic Nigerian flights. It seamlessly combines data from global GDS systems (via Amadeus API) with direct airline website scraping to provide complete market coverage.
 
-![Project Status](https://img.shields.io/badge/status-in%20development-orange)
+![Project Status](https://img.shields.io/badge/status-live-green)
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 
-## 🌟 Features
+## 🌟 Key Features
 
--   **Hybrid Search Architecture**:
-    -   **Parallel Execution**: The backend leverages Python's `asyncio` and `concurrent.futures` to query multiple sources simultaneously, significantly reducing total search time.
-    -   **Unified Data Model**: Results from disparate sources (Amadeus API JSON vs. Scraped HTML) are normalized into a single `FlightOffer` schema for the frontend.
+*   **Hybrid Search Engine**: Queries both the Amadeus API (for major carriers like Air Peace) and direct airline websites (ValueJet, XEJet) in parallel for maximum speed.
+*   **Smart Scrapers (Selenium)**:
+    *   **ValueJet (React/Next.js)**: 
+        *   Navigates a modern SPA which relies heavily on client-side hydration.
+        *   Implements intelligent waiting strategies to ensure the DOM is fully interactive before scraping.
+        *   Bypasses complex read-only UI components (like PrimeReact calendars) by directly injecting values into the application state via JavaScript execution.
+    *   **XEJet (AeroCRS/ASP.NET)**:
+        *   Handles legacy form submissions and `.aspx` postbacks.
+        *   Automates interaction with jQuery UI datepickers by traversing the calendar DOM structure.
+        *   Uses robust partial-text matching for dropdowns to handle inconsistent airport naming conventions across systems.
+    *   **Resilience & Debugging**: 
+        *   Built on a robust `BaseScraper` class that handles driver lifecycle and User-Agent rotation.
+        *   Automatically captures and saves screenshots to `backend/screenshots/` whenever an error occurs, allowing for "time-travel" debugging of failed scraping attempts.
+*   **Premium Web Interface**:
+    *   **Gemini-Inspired Design**: Clean, glassmorphic UI with responsive TailwindCSS layout.
+    *   **Interactive Results**: Filter by airline, sort by price/time, and view flight details with ease.
+    *   **Visual Separators**: Subtle animations for a polished user experience.
 
--   **Advanced Web Scrapers (Selenium)**:
-    -   **ValueJet Integration**: 
-        -   Handles a modern React/Next.js Single Page Application (SPA).
-        -   Implements complex logic to bypass hydration issues and interact with PrimeReact components (e.g., forcing date inputs via JS injection).
-    -   **XEJet Integration**:
-        -   Interfaces with an AeroCRS-based booking engine.
-        -   Navigates legacy ASP.NET forms and jQuery UI datepickers.
-    -   **Resilience**: Scrapers run in a headless Chrome environment with robust error handling and screenshot capture for debugging.
+## 🛠️ Technology Stack
 
--   **Global GDS Integration (Amadeus API)**:
-    -   **Standardized Data**: Fetches real-time availability for major GDS-hosted carriers (e.g., Air Peace, international airlines).
-    -   **OAuth2 Authentication**: Secure token management and automatic refreshing.
+*   **Backend**: Python, FastAPI, Selenium WebDriver (Chrome), Amadeus SDK.
+*   **Frontend**: HTML5, Vanilla JavaScript (ES6+), TailwindCSS.
+*   **Infrastructure**: `asyncio` for concurrency, `uvicorn` server.
 
--   **Premium UI**:
-    -   Gemini-inspired "TravelAI" design with Glassmorphism.
-    -   Responsive TailwindCSS layout with Dark Mode support.
-    -   Custom-themed Date Picker (Flatpickr).
-    -   Real-time loading states and skeleton loaders.
+## 🚀 Installation & Setup Guide
 
-## 🛠️ Tech Stack
+Follow these steps to run the project locally on your machine.
 
--   **Backend**: Python, FastAPI, Uvicorn, Amadeus SDK, Selenium WebDriver.
--   **Frontend**: HTML5, TailwindCSS, Vanilla JavaScript.
--   **Tools**: Flatpickr (Calendar), Google Fonts (Outfit).
+### 1. Prerequisites
 
-## 🚀 Getting Started
+Ensure you have the following installed:
+*   **Python 3.10+**: [Download Here](https://www.python.org/downloads/)
+*   **Google Chrome**: The web scrapers require a local installation of the Google Chrome browser to function.
+*   **Git**: To clone the repository.
 
-### Prerequisites
+### 2. Clone the Repository
 
--   Python 3.10 or higher.
--   An Amadeus for Developers account (for API keys).
+```bash
+git clone https://github.com/sforslime/live-flight-checker.git
+cd live-flight-checker
+```
 
-### Installation
+### 3. Environment Setup
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/sforslime/live-flight-checker.git
-    cd live-flight-checker
-    ```
+It is highly recommended to use a virtual environment.
 
-2.  **Create a Virtual Environment**
-    ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-    ```
+```bash
+# macOS/Linux
+python3 -m venv .venv
+source .venv/bin/activate
 
-3.  **Install Dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
+```
 
-4.  **Configure Environment Variables**
-    Create a `.env` file in the root directory and add your keys:
-    ```ini
-    AMADEUS_CLIENT_ID=your_client_id_here
-    AMADEUS_CLIENT_SECRET=your_client_secret_here
-    ```
+### 4. Install Dependencies
 
-### ▶️ Running the Application
+```bash
+pip install -r requirements.txt
+```
 
-1.  **Start the Server**
-    ```bash
-    uvicorn backend.main:app --reload
-    ```
+### 5. Configuration (.env)
 
-2.  **Open the App**
-    Visit `http://127.0.0.1:8000` in your browser.
+Create a file named `.env` in the root directory. You will need API keys from the [Amadeus for Developers](https://developers.amadeus.com/) portal.
 
-3.  **Usage**
-    -   Select Origin (e.g., Lagos - LOS).
-    -   Select Destination (e.g., Abuja - ABV).
-    -   Pick a date using the custom calendar.
-    -   Click "Search Flights" to see live results!
+```ini
+AMADEUS_CLIENT_ID=your_client_id_here
+AMADEUS_CLIENT_SECRET=your_client_secret_here
+```
+
+### 6. Running the App
+
+Start the development server:
+
+```bash
+# Make sure your virtual environment is active!
+export PYTHONPATH=$PYTHONPATH:. 
+uvicorn backend.main:app --reload
+```
+
+The application will be accessible at: **http://127.0.0.1:8000**
 
 ## 📂 Project Structure
 
 ```
 live-flight-checker/
 ├── backend/
-│   ├── main.py              # FastAPI entry point
-│   ├── models.py            # Data models (Pydantic)
-│   ├── utils.py             # Helper functions (Airline codes)
-│   └── services/
-│       └── amadeus_client.py # Amadeus API logic
+│   ├── main.py              # Application entry point & API routes
+│   ├── models.py            # Pydantic data models
+│   ├── utils.py             # Helper utilities
+│   ├── services/
+│   │   ├── amadeus_client.py   # API integration logic
+│   │   └── scrapers/           # Selenium scrapers
+│   │       ├── base_scraper.py # Base class with common logic
+│   │       ├── valuejet.py     # ValueJet implementation
+│   │       └── xejet.py        # XEJet implementation
+│   └── screenshots/         # Auto-generated debug screenshots (on error)
 ├── frontend/
-│   ├── index.html           # Main UI
-│   ├── style.css            # Custom animations & overrides
-│   └── app.js               # Frontend logic
-├── scripts/                 # Utility scripts (testing/verification)
-├── requirements.txt         # Python dependencies
-└── README.md                # Project documentation
+│   ├── index.html           # Main HTML template
+│   ├── app.js               # Frontend application logic
+│   ├── style.css            # Custom CSS styles
+│   └── images/              # Static assets (logos, favicon)
+├── requirements.txt         # Dependency list
+└── README.md                # Documentation
 ```
 
-## ⚠️ Notes for Developers
+## 🔧 Troubleshooting
 
--   **Security**: Never commit your `.env` file. It is already added to `.gitignore`.
--   **API Limits**: The Amadeus Self-Service API has rate limits. Check your quota if searches fail.
+*   **Scraper Errors**: If scrapers fail immediately, ensure you have Google Chrome installed. The `webdriver-manager` package will automatically download the matching ChromeDriver, but the browser itself must be present.
+*   **Screenshots**: If a scraper encounters an error, check the `backend/screenshots/` folder. It will contain a screenshot of the browser state at the moment of failure, helping you debug the issue.
+*   **Amadeus Errors**: Ensure your API keys in `.env` are correct and that your developer account has available quota.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1.  Fork the project
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
 ## 📜 License
 
-This project is for educational purposes. 
+This project is licensed under the MIT License - see the LICENSE file for details. 
