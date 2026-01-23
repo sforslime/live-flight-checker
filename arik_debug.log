@@ -1,7 +1,0 @@
-INFO:undetected_chromedriver.patcher:patching driver executable /Users/slime./Library/Application Support/undetected_chromedriver/undetected_chromedriver
-INFO:backend.services.scrapers.arik_air:[ArikAir] Navigating directly to: https://arikair.crane.aero/ibe/availability?tripType=ONE_WAY&depPort=LOS&arrPort=ABV&departureDate=20.01.2026&adult=1&child=0&infant=0&currency=NGN&cabinClass=ECONOMY&lang=EN
-INFO:backend.services.scrapers.arik_air:[ArikAir] Waiting for results...
-Initializing Arik Air Scraper...
-
-Found 0 flights.
-Check arik_results.html for the page structure.
