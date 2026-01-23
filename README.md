@@ -7,19 +7,32 @@ A modern, hybrid flight search engine designed to find the cheapest realtime pri
 
 ## 🌟 Features
 
--   **Hybrid Search Engine**:
-    -   **Amadeus API Integration**: Fetches standardized data for major carriers like Air Peace.
-    -   *(Coming Soon)* **Custom Web Scrapers**: Specialized scrapers for airlines not on GDS (e.g., Ibom Air, ValueJet).
+-   **Hybrid Search Architecture**:
+    -   **Parallel Execution**: The backend leverages Python's `asyncio` and `concurrent.futures` to query multiple sources simultaneously, significantly reducing total search time.
+    -   **Unified Data Model**: Results from disparate sources (Amadeus API JSON vs. Scraped HTML) are normalized into a single `FlightOffer` schema for the frontend.
+
+-   **Advanced Web Scrapers (Selenium)**:
+    -   **ValueJet Integration**: 
+        -   Handles a modern React/Next.js Single Page Application (SPA).
+        -   Implements complex logic to bypass hydration issues and interact with PrimeReact components (e.g., forcing date inputs via JS injection).
+    -   **XEJet Integration**:
+        -   Interfaces with an AeroCRS-based booking engine.
+        -   Navigates legacy ASP.NET forms and jQuery UI datepickers.
+    -   **Resilience**: Scrapers run in a headless Chrome environment with robust error handling and screenshot capture for debugging.
+
+-   **Global GDS Integration (Amadeus API)**:
+    -   **Standardized Data**: Fetches real-time availability for major GDS-hosted carriers (e.g., Air Peace, international airlines).
+    -   **OAuth2 Authentication**: Secure token management and automatic refreshing.
+
 -   **Premium UI**:
-    -   Gemini-inspired "TravelAI" design.
-    -   Glassmorphism effects and smooth animations.
-    -   Responsive layout with Dark Mode support (system preference).
+    -   Gemini-inspired "TravelAI" design with Glassmorphism.
+    -   Responsive TailwindCSS layout with Dark Mode support.
     -   Custom-themed Date Picker (Flatpickr).
--   **FastAPI Backend**: High-performance, asynchronous Python backend.
+    -   Real-time loading states and skeleton loaders.
 
 ## 🛠️ Tech Stack
 
--   **Backend**: Python, FastAPI, Uvicorn, Amadeus SDK.
+-   **Backend**: Python, FastAPI, Uvicorn, Amadeus SDK, Selenium WebDriver.
 -   **Frontend**: HTML5, TailwindCSS, Vanilla JavaScript.
 -   **Tools**: Flatpickr (Calendar), Google Fonts (Outfit).
 

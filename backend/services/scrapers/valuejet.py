@@ -242,63 +242,102 @@ class ValueJetScraper(BaseScraper):
         ValueJet uses a PrimeReact Calendar component.
         """
         try:
-            # Click on the date input to open the calendar
-            date_container = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid='departure-date-input']"))
-            )
-            date_container.click()
-            time.sleep(1)
-            
             # Parse the target date
             target_date = datetime.strptime(date, "%Y-%m-%d")
             day = target_date.day
-            
-            # Wait for calendar to appear
-            WebDriverWait(self.driver, 5).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".p-datepicker"))
-            )
-            
-            # Try to navigate to the correct month if needed
-            # For now, assume current month is shown and try to click the day
-            
-            # Click the day (PrimeReact uses spans with specific structure)
-            # Try multiple selector patterns
-            day_selectors = [
-                f"//td[not(contains(@class,'disabled'))]/span[text()='{day}']",
-                f"//span[@class='p-datepicker-day' and text()='{day}']",
-                f"//*[@class='p-datepicker']//span[text()='{day}']"
-            ]
-            
-            for selector in day_selectors:
-                try:
-                    day_elem = WebDriverWait(self.driver, 2).until(
-                        EC.element_to_be_clickable((By.XPATH, selector))
-                    )
-                    day_elem.click()
-                    logger.info(f"[{self.airline_name}] Selected day {day} using selector")
-                    return
-                except:
-                    continue
-            
-            # Fallback: try clicking any element with the day number
-            all_spans = self.driver.find_elements(By.CSS_SELECTOR, ".p-datepicker span")
-            for span in all_spans:
-                if span.text == str(day):
-                    span.click()
-                    logger.info(f"[{self.airline_name}] Selected day {day} via span search")
-                    return
-            
-            logger.warning(f"[{self.airline_name}] Could not click date, trying input injection...")
-            # Last resort: inject the date into the input
-            date_input = self.driver.find_element(By.CSS_SELECTOR, "[data-testid='departure-date-input'] input")
             formatted_date = target_date.strftime("%d/%m/%Y")
-            self.driver.execute_script(
-                f"arguments[0].value = '{formatted_date}'; arguments[0].dispatchEvent(new Event('change'));",
-                date_input
-            )
             
+            # Locate the input field
+            try:
+                date_input = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='departure-date-input'] input"))
+                )
+            except:
+                logger.error(f"[{self.airline_name}] Date input element not found!")
+                return
+
+            # --- Attempt 1: UI Interaction (Clicking the calendar) ---
+            ui_success = False
+            try:
+                # Open calendar by clicking the container (not the input itself sometimes)
+                date_container = self.driver.find_element(By.CSS_SELECTOR, "[data-testid='departure-date-input']")
+                date_container.click()
+                
+                # Wait for calendar
+                WebDriverWait(self.driver, 3).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, ".p-datepicker"))
+                )
+                
+                # Click the day
+                # PrimeReact uses spans inside tds.
+                day_xpath = f"//td[not(contains(@class, 'p-datepicker-other-month'))]/span[text()='{day}']"
+                
+                day_elem = WebDriverWait(self.driver, 3).until(
+                    EC.element_to_be_clickable((By.XPATH, day_xpath))
+                )
+                day_elem.click()
+                logger.info(f"[{self.airline_name}] Clicked day {day} via UI")
+                ui_success = True
+                time.sleep(0.5) 
+                
+            except Exception as e:
+                logger.warning(f"[{self.airline_name}] UI date selection attempt 1 failed: {e}")
+
+            # --- Verification & Fallback ---
+            # Check if error message is present or input value is empty
+            
+            has_error = False
+            try:
+                error_msg = self.driver.find_element(By.CSS_SELECTOR, "[data-testid='error-message']")
+                if error_msg.is_displayed() and "departure date" in error_msg.text.lower():
+                    has_error = True
+            except:
+                pass # Element not found usually means no error
+
+            input_val = date_input.get_attribute('value')
+            if not input_val:
+                has_error = True
+
+            if has_error or not ui_success:
+                logger.info(f"[{self.airline_name}] UI selection unclear, trying send_keys...")
+                try:
+                    # Attempt 2: Typing directly
+                    date_input.click()
+                    # Clear using backspace keys as .clear() sometimes fails on React inputs
+                    date_input.send_keys(Keys.COMMAND + "a")
+                    date_input.send_keys(Keys.DELETE)
+                    # For non-mac use CONTROL + a if needed, but let's assume standard keys work or just clear
+                    date_input.clear() 
+                    
+                    date_input.send_keys(formatted_date)
+                    date_input.send_keys(Keys.TAB) # Tab out to trigger blur
+                    time.sleep(0.5)
+                except Exception as e:
+                    logger.error(f"[{self.airline_name}] Send keys failed: {e}")
+
+            # --- Attempt 3: JS Injection (Final Force) ---
+            # If still failing (value empty or error persists), force it via JS
+            input_val_final = date_input.get_attribute('value')
+            
+            # Check error again
+            try:
+                error_msg = self.driver.find_element(By.CSS_SELECTOR, "[data-testid='error-message']")
+                if error_msg.is_displayed() and "departure date" in error_msg.text.lower():
+                     logger.warning(f"[{self.airline_name}] Validation error still present before JS inject.")
+                     # Force JS
+                     self.driver.execute_script("""
+                        var input = arguments[0];
+                        var value = arguments[1];
+                        input.value = value;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                        input.dispatchEvent(new Event('blur', { bubbles: true }));
+                    """, date_input, formatted_date)
+            except:
+                pass 
+
         except Exception as e:
-            logger.warning(f"[{self.airline_name}] Date selection failed: {e}")
+            logger.error(f"[{self.airline_name}] Critical error in _set_date: {e}")
     
     def _parse_results(self) -> List[FlightOffer]:
         """
