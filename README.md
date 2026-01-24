@@ -4,7 +4,7 @@ A modern, hybrid flight search engine designed to find the cheapest realtime pri
 
 ![Project Status](https://img.shields.io/badge/status-complete--ish-green)
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
-<a href="#Contribution" title="Contributions are welcome"><img src="https://img.shields.io/badge/contributions-welcome-green.svg"></a>
+<a href="#Contributions" title="Contributions are welcome"><img src="https://img.shields.io/badge/contributions-welcome-green.svg"></a>
 <a href="https://twitter.com/sforslime" title="Slime on Twitter"><img src="https://img.shields.io/twitter/follow/sforslime.svg?style=social&label=Follow"></a>
 
 ## 🌟 Key Features
@@ -122,7 +122,7 @@ live-flight-checker/
 *   **Screenshots**: If a scraper encounters an error, check the `backend/screenshots/` folder. It will contain a screenshot of the browser state at the moment of failure, helping you debug the issue.
 *   **Amadeus Errors**: Ensure your API keys in `.env` are correct and that your developer account has available quota.
 
-## 🤝 Contributing
+## Contributions
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
