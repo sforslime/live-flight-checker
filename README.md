@@ -4,6 +4,8 @@ A modern, hybrid flight search engine designed to find the cheapest realtime pri
 
 ![Project Status](https://img.shields.io/badge/status-complete--ish-green)
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
+<a href="#Contribution" title="Contributions are welcome"><img src="https://img.shields.io/badge/contributions-welcome-green.svg"></a>
+<a href="https://twitter.com/sforslime" title="Slime on Twitter"><img src="https://img.shields.io/twitter/follow/sforslime.svg?style=social&label=Follow"></a>
 
 ## 🌟 Key Features
 

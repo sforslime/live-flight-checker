@@ -134,8 +134,9 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mt-2 px-2">
-                    <div class="flex items-center gap-9 text-subtext-light dark:text-subtext-dark">
+                <div class="flex flex-col md:flex-row justify-between items-center mt-2 px-2 gap-4 md:gap-0">
+                    <div
+                        class="flex flex-wrap justify-center md:justify-start items-center gap-6 text-subtext-light dark:text-subtext-dark w-full md:w-auto">
                         <!-- Airline Filter -->
                         <div
                             class="relative group flex items-center gap-1 cursor-pointer hover:text-primary transition-colors">
@@ -176,7 +177,7 @@
 
                     </div>
                     <button id="search-btn"
-                        class="flex items-center gap-2 text-subtext-light dark:text-subtext-dark hover:text-primary dark:hover:text-primary-light transition-colors"
+                        class="w-full md:w-auto flex justify-center items-center gap-2 text-subtext-light dark:text-subtext-dark hover:text-primary dark:hover:text-primary-light transition-colors mt-2 md:mt-0 py-3 md:py-0 bg-gray-100 md:bg-transparent rounded-xl md:rounded-none dark:bg-gray-800 md:dark:bg-transparent"
                         type="submit">
                         <span class="text-sm font-medium">Search Flights</span>
                         <span class="material-icons text-lg">arrow_forward</span>
@@ -210,7 +211,9 @@
 
     <footer class="fixed bottom-4 right-4 text-xs text-subtext-light dark:text-subtext-dark opacity-50">
         <a class="cursor-pointer hover:text-primary transition-colors" target="_blank"
-            href="https://github.com/sforslime/live-flight-checker">Check out the repo here!!</a> • Built by AYO!
+            href="https://github.com/sforslime/live-flight-checker">Check out the repo here!!</a> • Built by <a
+            class="cursor-pointer hover:text-primary transition-colors" target="_blank"
+            href="https://github.com/sforslime">AYO!</a>
     </footer>
 
     <script src="/static/app.js?v=2"></script>
